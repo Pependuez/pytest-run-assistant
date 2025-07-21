@@ -20,10 +20,10 @@
                 "default": "python",
                 "description": "Path to Python executable, virtual enviroment is prefferable"
             },
-                "pythonFuncRunner.extraPytestArgs": {
+            "pythonFuncRunner.extraPytestArgs": {
                 "type": "string",
                 "default": "",
-                "description": "Extra arguments for pytest (example: --tb=short -q)"
+                "description": "Extra pytest arguments to apply for all test runs (Run and Debug)"
             }
         }
     }
