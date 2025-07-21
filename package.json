@@ -1,0 +1,40 @@
+{
+  "name": "pytest-run-assistant",
+  "displayName": "Pytest Run Assistant",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.102.0"
+  },
+  "publisher": "Pependuez",
+  "activationEvents": [
+    "onLanguage:python"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "configuration": {
+        "type": "object",
+        "title": "Python Function Runner",
+        "properties": {
+            "pythonFuncRunner.pythonPath": {
+                "type": "string",
+                "default": "python",
+                "description": "Path to Python executable, virtual enviroment is prefferable"
+            },
+                "pythonFuncRunner.extraPytestArgs": {
+                "type": "string",
+                "default": "",
+                "description": "Extra arguments for pytest (example: --tb=short -q)"
+            }
+        }
+    }
+},
+  "scripts": {
+    "compile": "tsc -p .",
+    "vscode:prepublish": "npm run compile"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.13",
+    "@types/vscode": "^1.50.0",
+    "typescript": "^4.0.0"
+  }
+}
