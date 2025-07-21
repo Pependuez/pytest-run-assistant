@@ -67,6 +67,11 @@ export class PythonFunctionLensProvider implements vscode.CodeLensProvider {
             title: '🐞 Debug',
             command: 'pythonFuncRunner.debug',
             arguments: [document.uri, qualifiedName],
+          }),
+          new vscode.CodeLens(range, {
+            title: '⚙ Args',
+            command: 'pythonFuncRunner.setArgs',
+            arguments: [document.uri, qualifiedName],
           })
         );
       }
