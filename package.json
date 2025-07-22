@@ -1,19 +1,53 @@
 {
   "name": "pytest-run-assistant",
   "displayName": "Pytest Run Assistant",
-  "version": "0.0.1",
+  "description": "A VSCode extension to run and debug individual pytest functions or classes directly from the editor using CodeLens.",
+
+  "version": "0.1.0",
   "engines": {
     "vscode": "^1.102.0"
   },
+  "categories": ["Testing"],
+    "keywords": [
+        "pytest",
+        "python",
+        "testing",
+        "test",
+        "runner",
+        "code lens",
+        "codelens",
+        "debug",
+        "pytest runner",
+        "python test",
+        "vscode extension",
+        "unit testing",
+        "automation",
+        "launch arguments",
+        "per test config"
+    ],
   "publisher": "Pependuez",
   "activationEvents": [
     "onLanguage:python"
   ],
   "main": "./out/extension.js",
   "contributes": {
+    "commands": [
+      {
+        "command": "pythonFuncRunner.run",
+        "title": "Run Pytest Function"
+      },
+      {
+        "command": "pythonFuncRunner.debug",
+        "title": "Debug Pytest Function"
+      },
+      {
+        "command": "pythonFuncRunner.setArgs",
+        "title": "Set Pytest Arguments"
+      }
+    ],
     "configuration": {
         "type": "object",
-        "title": "Python Function Runner",
+        "title": "Pytest Run Assistant",
         "properties": {
             "pythonFuncRunner.pythonPath": {
                 "type": "string",
@@ -36,5 +70,6 @@
     "@types/node": "^24.0.13",
     "@types/vscode": "^1.50.0",
     "typescript": "^4.0.0"
-  }
+  },
+  "icon": "icon.png"
 }
