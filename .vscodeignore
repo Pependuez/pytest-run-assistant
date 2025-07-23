@@ -1,0 +1,5 @@
+.vscode/
+.git/
+*.ts
+*.md
+node_modules/

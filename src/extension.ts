@@ -14,6 +14,10 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.languages.registerCodeLensProvider(selector, provider)
   );
 
+function getOrCreateTerminal(): vscode.Terminal {
+  const existing = vscode.window.terminals.find(t => t.name === 'pytest-run');
+  return existing ?? vscode.window.createTerminal('pytest-run');
+}
   context.subscriptions.push(
     vscode.commands.registerCommand('pythonFuncRunner.setArgs', async (uri: vscode.Uri, qualifiedName: string) => {
         const key = getArgsKey(uri, qualifiedName);
@@ -37,12 +41,14 @@ export function activate(context: vscode.ExtensionContext) {
     const filePath = uri.fsPath;
     const workspaceFolder = vscode.workspace.getWorkspaceFolder(uri);
     const relativePath = workspaceFolder ? path.relative(workspaceFolder.uri.fsPath, filePath) : filePath;
+    const relForPytest = relativePath.split(path.sep).join('/');
     const key = getArgsKey(uri, funcName);
     const argsInput = context.globalState.get<string>(key);
     const pythonPath = vscode.workspace.getConfiguration('pythonFuncRunner').get<string>('pythonPath') ?? 'python';
     const config = vscode.workspace.getConfiguration('pythonFuncRunner');
     const globalArgs = config.get<string>('extraPytestArgs') ?? '';
-    const commandParts = [pythonPath, '-m pytest'];
+    const safePythonPath = `"${pythonPath}"`;
+    const commandParts = [safePythonPath, '-m', 'pytest'];
 
     if (globalArgs) {
         commandParts.push(globalArgs);
@@ -50,11 +56,12 @@ export function activate(context: vscode.ExtensionContext) {
     if (argsInput) {
         commandParts.push(argsInput);
     }
-    commandParts.push(`${relativePath}::${funcName}`);
+    commandParts.push(`${relForPytest}::${funcName}`);
 
     const command = commandParts.join(' ');
 
-    const terminal = vscode.window.createTerminal('pytest-run');
+    const terminal = getOrCreateTerminal();
+
     terminal.show();
     terminal.sendText(command);
     })
@@ -67,6 +74,7 @@ export function activate(context: vscode.ExtensionContext) {
 
     const filePath = uri.fsPath;
     const relativePath = vscode.workspace.asRelativePath(filePath);
+    const relForPytest = relativePath.split(path.sep).join('/');
     const workspaceFolder = vscode.workspace.getWorkspaceFolder(uri);
     const globalArgs = config.get<string>('extraPytestArgs') ?? '';
 
@@ -81,7 +89,7 @@ export function activate(context: vscode.ExtensionContext) {
         module: 'pytest',
         args: [
             ...(globalArgs ? globalArgs.split(' ') : []),
-            `${relativePath}::${funcName}`,
+            `${relForPytest}::${funcName}`,
             ...(argsInput ? argsInput.split(' ') : [])
         ],
         console: 'integratedTerminal',
