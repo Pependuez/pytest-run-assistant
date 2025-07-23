@@ -33,7 +33,12 @@ export class PythonFunctionLensProvider implements vscode.CodeLensProvider {
             title: '🐞 Debug class',
             command: 'pythonFuncRunner.debug',
             arguments: [document.uri, name],
-          })
+          }),
+          new vscode.CodeLens(range, {
+            title: '⚙ Args',
+            command: 'pythonFuncRunner.setArgs',
+            arguments: [document.uri, name],
+          }),
         );
 
         continue;
@@ -72,11 +77,10 @@ export class PythonFunctionLensProvider implements vscode.CodeLensProvider {
             title: '⚙ Args',
             command: 'pythonFuncRunner.setArgs',
             arguments: [document.uri, qualifiedName],
-          })
+          }),
         );
       }
     }
-
     return this.codeLenses;
   }
 }

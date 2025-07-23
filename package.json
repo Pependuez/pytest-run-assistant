@@ -3,7 +3,7 @@
   "displayName": "Pytest Run Assistant",
   "description": "A VSCode extension to run and debug individual pytest functions or classes directly from the editor using CodeLens.",
 
-  "version": "0.1.0",
+  "version": "0.1.1",
   "engines": {
     "vscode": "^1.102.0"
   },
