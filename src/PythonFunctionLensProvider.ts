@@ -4,6 +4,7 @@ export class PythonFunctionLensProvider implements vscode.CodeLensProvider {
   private codeLenses: vscode.CodeLens[] = [];
   private testFuncRegex = /^\s*def (test_\w+)\(/;
   private testClassRegex = /^\s*class (Test\w*)\b/;
+  private mainRegex = /^\s*if\s+__name__\s*==\s*["']__main__["']\s*:/;
 
   public provideCodeLenses(document: vscode.TextDocument): vscode.CodeLens[] {
     this.codeLenses = [];
@@ -80,7 +81,31 @@ export class PythonFunctionLensProvider implements vscode.CodeLensProvider {
           }),
         );
       }
+      if (this.mainRegex.test(text)) {
+        const position = new vscode.Position(i, 0);
+        const range = new vscode.Range(position, position);
+        const qualifiedName = '__main__';
+
+        this.codeLenses.push(
+          new vscode.CodeLens(range, {
+            title: '▶ Run main',
+            command: 'pythonFuncRunner.runMain',
+            arguments: [document.uri],
+          }),
+          new vscode.CodeLens(range, {
+            title: '🐞 Debug main',
+            command: 'pythonFuncRunner.debugMain',
+            arguments: [document.uri],
+          }),
+          new vscode.CodeLens(range, {
+            title: '⚙ Args',
+            command: 'pythonFuncRunner.setArgs',
+            arguments: [document.uri, qualifiedName],
+          }),
+        );
+      }
     }
     return this.codeLenses;
   }
 }
+
