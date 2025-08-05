@@ -7,13 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [0.1.3] - 2025-07-23
+## [0.1.3] - 2025-08-05
 
 ### Added
 - Run, Debug and Args functionality for name-main idiom
 
 ### Changed
-- Force default save file before run
+- Force save file before run
 
 ---
 
