@@ -4,14 +4,15 @@
 
 ## Features
 
-- CodeLens buttons for test functions and classes:
+- CodeLens buttons for test functions and classes (or name-main idiom):
   - ▶ **Run**
   - 🐞 **Debug**
   - ⚙️ **Args** – configure launch arguments for a specific test
-- Stores individual launch arguments per test
+- Stores individual launch arguments per test (or `if __name__ == "__main__":` construction)
 - Runs tests using `pytest` in the integrated terminal
 - Debugs using VS Code's built-in debugger and `debugpy`
-- Supports configuration for Python and Pytest paths
+- Supports configuration for Python path
+- Forced save file before run (for debug is default behavior)
 
 ## Configuration
 
@@ -20,7 +21,7 @@ Add the following to your `settings.json`:
 ```json
 {
   "pythonFuncRunner.pythonPath": "/path/to/python",
-  "pythonFuncRunner.extraRunArgs": "-v",
+  "pythonFuncRunner.extraRunArgs": "-rpP",
 }
 ```
 or
