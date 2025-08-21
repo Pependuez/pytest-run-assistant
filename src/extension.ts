@@ -1,10 +1,19 @@
+import * as path from 'path';
 import * as vscode from 'vscode';
 import { PythonFunctionLensProvider } from './PythonFunctionLensProvider';
-import * as path from 'path';
 
 
 function getArgsKey(uri: vscode.Uri, qualifiedName: string): string {
   return `${uri.toString()}::${qualifiedName}`;
+}
+
+function resolvePythonPath(configPath: string, uri: vscode.Uri): string {
+  if (path.isAbsolute(configPath)) return configPath;
+
+  const workspaceFolder = vscode.workspace.getWorkspaceFolder(uri);
+  if (!workspaceFolder) return configPath;
+
+  return path.join(workspaceFolder.uri.fsPath, configPath);
 }
 
 export function activate(context: vscode.ExtensionContext) {
@@ -50,8 +59,8 @@ export function activate(context: vscode.ExtensionContext) {
       const relForPytest = relativePath.split(path.sep).join('/');
       const key = getArgsKey(uri, funcName);
       const argsInput = context.globalState.get<string>(key);
-      const pythonPath = vscode.workspace.getConfiguration('pythonFuncRunner').get<string>('pythonPath') ?? 'python';
-      const config = vscode.workspace.getConfiguration('pythonFuncRunner');
+      const rawPythonPath = vscode.workspace.getConfiguration('pythonFuncRunner').get<string>('pythonPath') ?? 'python';
+      const pythonPath = resolvePythonPath(rawPythonPath, uri);      const config = vscode.workspace.getConfiguration('pythonFuncRunner');
       const globalArgs = config.get<string>('extraPytestArgs') ?? '';
       const safePythonPath = `"${pythonPath}"`;
       const commandParts = [safePythonPath, '-m', 'pytest'];
@@ -78,8 +87,8 @@ export function activate(context: vscode.ExtensionContext) {
                                     async (uri: vscode.Uri, funcName: string) => {
 
     const config = vscode.workspace.getConfiguration('pythonFuncRunner');
-    const pythonPath = config.get<string>('pythonPath') ?? 'python';
-
+    const rawPythonPath = config.get<string>('pythonPath') ?? 'python';
+    const pythonPath = resolvePythonPath(rawPythonPath, uri);
     const filePath = uri.fsPath;
     const relativePath = vscode.workspace.asRelativePath(filePath);
     const relForPytest = relativePath.split(path.sep).join('/');
@@ -120,7 +129,8 @@ export function activate(context: vscode.ExtensionContext) {
       const key = getArgsKey(uri, '__main__');
       const argsInput = context.globalState.get<string>(key);
       const filePath = uri.fsPath;
-      const pythonPath = vscode.workspace.getConfiguration('pythonFuncRunner').get<string>('pythonPath') ?? 'python';
+      const rawPythonPath = vscode.workspace.getConfiguration('pythonFuncRunner').get<string>('pythonPath') ?? 'python';
+      const pythonPath = resolvePythonPath(rawPythonPath, uri);
 
       const command = [
         `"${pythonPath}"`,
@@ -139,7 +149,8 @@ export function activate(context: vscode.ExtensionContext) {
       const argsInput = context.globalState.get<string>(key);
       const filePath = uri.fsPath;
       const workspaceFolder = vscode.workspace.getWorkspaceFolder(uri);
-      const pythonPath = vscode.workspace.getConfiguration('pythonFuncRunner').get<string>('pythonPath') ?? 'python';
+      const rawPythonPath = vscode.workspace.getConfiguration('pythonFuncRunner').get<string>('pythonPath') ?? 'python';
+      const pythonPath = resolvePythonPath(rawPythonPath, uri);
 
       const debugConfig: vscode.DebugConfiguration = {
         name: 'Debug __main__',
